@@ -21,15 +21,20 @@ Stream compaction is the removal of a particular value from an array. The image 
 
 ## Answer to Questions
 
+### Performance of scan speeds (Array sizes)
+
+![](scan_speeds.png)
+
+### To guess at what might be happening inside the Thrust implementation (e.g. allocation, memory copy), take a look at the Nsight timeline for its execution. Your analysis here doesn't have to be detailed, since you aren't even looking at the code for the implementation.
+
+The thrust implementation is much better optimized for larger instances. It does not, however, work well with small array sizes.
+This is most likely due to its implementation. It takes in consideration a better block size for a larger amount of elements to scan through, so that is why it is much better in performance for larger numbers.
+
 ### Can you find the performance bottlenecks? Is it memory I/O? Computation? Is it different for each implementation?
 
 I did find performance bottlenecks. I think, at least for the work efficient implementation of scan, it might be memory I/O as one has to send data to the GPU and then send it back for each iteration of d. For CPU, as shown in the graph below, it has to be with the computation as it has to iterate through every single node. The work-efficient implementation beats the naive implementation at first, but later, the naive implementation beats the work-efficient implementation as the memory i/o overhead becomes much larger than the computation overhead. 
 
-## Performance of scan speeds
-
-![](scan_speeds.png)
-
-## Output of test program
+## Output of program
 
 ```
 ****************
